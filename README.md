@@ -20,17 +20,17 @@ We expect our most frequent user to be **elementary school teachers** (and stude
 
 ## Competitor Analysis
 We identified a few key competitors in the market. We believe that our product can add unique values to the market that hasn't been done by the others.
-![competitor analysis](resources/readme_images/competitor_analysis.png)
+![competitor analysis](readme_images/competitor_analysis.png)
 
 ## Approach
 The application is consisted of two main capabilities - OCR (optimized character recognition) system and front end interactive application.
 
 Students can scan or take a photo of their written work, upload it to the application. The work will be run through an OCR model to translate the handwritten work to formatted text. Both the original image and the formatted text will be stored in our cloud database. Teachers would have the ability to access the students work through the front end teachers dashboard.
-![approach](resources/readme_images/approach.png)
+![approach](readme_images/approach.png)
 
 ### Modeling
 
 ### Database Schema
-![database_schema](resources/readme_images/database_schema.png)
+![database_schema](readme_images/database_schema.png)
 
 ## [Application Link](https://github.com/allison-godfrey/capstone-project)
