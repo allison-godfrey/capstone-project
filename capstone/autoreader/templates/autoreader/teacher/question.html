@@ -1,0 +1,36 @@
+{% extends "base_teacher.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <p></p>
+  <h1 class="h3 mb-2 text-gray-800">{{ question.question_name }}</h1>
+  <p class="mb-4">{{ question.description }}</p>
+
+  <div class="align-items-center justify-content-between mb-6"> 
+    <div class="row">
+      <div class="col-lg-6">
+        {% for response, text in responses %}
+          <div class="card shadow mb-4">
+              <!-- Card Header - Accordion -->
+              <a href="#collapseCardExample-{{ question.id }}" class="d-block card-header py-3" data-toggle="collapse"
+                  role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                  <h6 class="m-0 font-weight-bold text-primary">{{ response.student.user.username }}</h6>
+              </a>
+              <!-- Card Content - Collapse -->
+              <div class="collapse show" id="collapseCardExample-{{ question.id }}">
+                  <div class="card-body">
+                    <img width=300 height=200 src="/autoreader/{{ response.response.name }}"></img>
+                  </div>
+              </div>
+              {{ text }}
+          </div>
+
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

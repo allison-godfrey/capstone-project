@@ -1,0 +1,24 @@
+{% extends "base_teacher.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<p></p>
+<div class="container-fluid">
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      Create a course
+    </h1>
+  </div>
+  <div class="d-sm-flex align-items-center justify-content-between mb-6">
+    <form method="post" action="{% url 'autoreader:create_course' %}">
+      {% csrf_token %}
+      {{ course_form|crispy }}
+      <input class="btn btn-primary" type="submit" value="Create Course" />
+      <input type="hidden" name="next" value="{{ next }}" />
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+

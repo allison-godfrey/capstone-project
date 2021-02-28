@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block navtitle %}
+<li class="nav-item active">
+  <a class="nav-link" href="{% url 'autoreader:home' %}">
+    <i class="fas fa-fw fa-chart-line"></i>
+    <span>Student Dashboard</span>
+  </a>
+</li>
+{% endblock %}
+
+{% block navitems %}
+<li class="nav-item">
+  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+    <i class="fas fa-fw fa-copy"></i>
+    <span>Courses</span>
+  </a>
+  <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+      <h6 class="collapse-header">All Courses:</h6>
+      {% for course in courses %}
+        <a class="collapse-item" href="{% url 'autoreader:student_course' course_id=course.id %}">{{ course.course_name }}</a>
+      {% endfor %}
+      <a class="collapse-item" href="{% url 'autoreader:join_course' %}"><i class="fas fa-plus-circle text-gray-600"></i> Join Course</a>
+    </div>
+  </div>
+</li>
+{% endblock %}

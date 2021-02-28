@@ -1,0 +1,59 @@
+{% extends "base_student.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <p></p>
+  <h1 class="h3 mb-2 text-gray-800">{{ assignment.assignment_name }}</h1>
+  <p class="mb-4">{{ assignment.description }}</p>
+
+  <div class="align-items-center justify-content-between mb-6"> 
+    <div class="row">
+      <div class="col-lg-6">
+
+        {% for question, response in questions %}
+          <div class="card shadow mb-4">
+            <!-- Card Header - Accordion -->
+            <a href="#collapseCardExample-{{ question.id }}" class="d-block card-header py-3" data-toggle="collapse"
+                role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                <h6 class="m-0 font-weight-bold text-primary">
+                  {{ question.question_name }}
+                  {% if response %}
+                    <i class="fas fa-check" style="color: LightGreen"></i>
+                  {% endif %}
+                </h6>
+            </a>
+            <!-- Card Content - Collapse -->
+            <div class="collapse" id="collapseCardExample-{{ question.id }}">
+                <div class="card-body">
+                  <p>{{ question.description }}</p>
+
+                    <div class="d-sm-flex align-items-center justify-content-between mb-6">
+                      {% if not response %}
+                        <form method="post" action="{% url 'autoreader:student_question' course_id=course_id assignment_id=assignment.id question_id=question.id %}" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          {{ response_form|crispy }}
+                          <input class="btn btn-primary" type="submit" value="Submit" />
+                          <input type="hidden" name="next" value="{{ next }}" />
+                        </form>
+                      {% else %}
+                        <p>You've already submitted an answer!</p>
+                      {% endif %}
+                    </div>
+                </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+  	{# {% for question in questions %}
+      <a class="btn btn-secondary" href="{% url 'autoreader:question' question_id=question.id assignment_id=assignment.id course_id=course_id %}">{{ question.question_name }}</a>
+	  {% endfor %}
+    <a class="btn btn-primary" href="{% url 'autoreader:create_question' assignment_id=assignment.id course_id=course_id %}">Create Question</a>
