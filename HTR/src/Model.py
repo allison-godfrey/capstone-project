@@ -141,8 +141,8 @@ class Model:
 
     def setupTF(self):
         "initialize TF"
-        print('Python: ' + sys.version)
-        print('Tensorflow: ' + tf.__version__)
+        #print('Python: ' + sys.version)
+        #print('Tensorflow: ' + tf.__version__)
 
         sess = tf.compat.v1.Session()  # TF session
 
@@ -156,7 +156,7 @@ class Model:
 
         # load saved model if available
         if latestSnapshot:
-            print('Init with stored values from ' + latestSnapshot)
+            #print('Init with stored values from ' + latestSnapshot)
             saver.restore(sess, latestSnapshot)
         else:
             print('Init with new values')
