@@ -9,3 +9,5 @@ dump/
 data/mnistAugment
 data/mnistAugment/*
 data/mnistAugment/*/*
+src/.ipynb_checkpoints
+src/.ipynb_checkpoints/*
