@@ -6,6 +6,6 @@ notes/
 *.pyc
 .idea/
 dump/
-src/mnistAugment
-src/mnistAugment/*
-src/mnistAugment/*/*
+data/mnistAugment
+data/mnistAugment/*
+data/mnistAugment/*/*
