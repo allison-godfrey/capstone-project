@@ -1,0 +1,13 @@
+data/img
+data/img/*
+src/__pycache__/
+notes/
+*.so
+*.pyc
+.idea/
+dump/
+data/mnistAugment
+data/mnistAugment/*
+data/mnistAugment/*/*
+src/.ipynb_checkpoints
+src/.ipynb_checkpoints/*
