@@ -11,8 +11,6 @@
 
   <!-- Content Row -->
   <div class="row">
-
-      <!-- Earnings (Monthly) Card Example -->
       <div class="col-xl-3 col-md-6 mb-4">
           <div class="card border-left-primary shadow h-100 py-2">
               <div class="card-body">
@@ -30,7 +28,6 @@
           </div>
       </div>
 
-      <!-- Earnings (Monthly) Card Example -->
       <div class="col-xl-3 col-md-6 mb-4">
           <div class="card border-left-success shadow h-100 py-2">
               <div class="card-body">
@@ -48,7 +45,6 @@
           </div>
       </div>
 
-      <!-- Earnings (Monthly) Card Example -->
       <div class="col-xl-3 col-md-6 mb-4">
           <div class="card border-left-info shadow h-100 py-2">
               <div class="card-body">
@@ -95,6 +91,61 @@
           </div>
       </div>
   </div>
+  <div class="row">
+    <div class="col-xl-12 col-md-6 mb-4">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Progress Tracker</h6>
+        </div>
+        <div class="card-body">
+            {% for assignment, course, response_rate, color, questions_remaining  in bar_chart_data %}
+              <h4 class="small font-weight-bold">
+                <a href="{% url 'autoreader:student_assignment' course_id=course.id assignment_id=assignment.id %}">
+                  {{ course.course_name }}: {{ assignment.assignment_name }}
+                  <span class="float-right">{{ questions_remaining }} question(s) remaining</span>
+                </a>
+              </h4>
+              <div class="progress mb-4">
+                  <div class="progress-bar bg-{{ color }}" role="progressbar" style="width: {{ response_rate }}%"
+                      aria-valuenow="{{ response_rate }}" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xl-12 col-md-6 mb-4">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Upcoming Assignments</h6>
+        </div>
+        <div class="card-body">
+          <button class="btn btn-primary" id="current-month" disabled>{{ current_month_year }}</button>
+          <button class="btn btn-primary" id="next-month">{{ next_month_year }}</button>
+          <div id="calendar">
+            {{ current_calendar }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+  $('#next-month').on('click', function() {
+    $(this).prop('disabled', true);
+    $('#current-month').prop('disabled', false);
+    $('#calendar').html(`{{ next_calendar }}`);
+  });
+
+  $('#current-month').on('click', function() {
+    $(this).prop('disabled', true);
+    $('#next-month').prop('disabled', false);
+    $('#calendar').html(`{{ current_calendar }}`);
+  });
+</script>
 {% endblock %}

@@ -2,6 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from .models import Person, Course, Assignment, Question, Response
 from .helpers import validate_course_code
+from datetime import datetime
 
 class PersonForm(ModelForm):
   class Meta:
@@ -20,7 +21,10 @@ class CourseForm(ModelForm):
 class AssignmentForm(ModelForm):
 	class Meta:
 		model = Assignment
-		fields = ("assignment_name", "description")
+		fields = ("assignment_name", "description", "due_date")
+		widgets = {
+			'due_date': forms.TextInput(attrs = {'type': 'date', 'min': str(datetime.now().date())}),
+		}
 
 class QuestionForm(ModelForm):
 	class Meta:
@@ -34,3 +38,28 @@ class ResponseForm(ModelForm):
 	class Meta:
 		model = Response
 		fields = ("response",)
+
+class UpdateResponseForm(ModelForm):
+	class Meta:
+		model = Response
+		fields = ("text",)
+		widgets = {
+			'text': forms.Textarea,
+		}
+		labels = {
+			'text': 'My response',
+		}
+
+class FeedbackForm(ModelForm):
+	class Meta:
+		model = Response
+		fields = ("feedback",)
+		widgets = {
+			'feedback': forms.Textarea(attrs={
+				'placeholder': 'Enter your feedback here...',
+				'rows': 5,
+			}),
+		}
+		labels = {
+			'feedback': '',
+		}

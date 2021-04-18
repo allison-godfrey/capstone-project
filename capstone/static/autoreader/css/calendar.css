@@ -1,0 +1,25 @@
+.mon, .tue, .wed, .thu, .fri, .sat, .sun {
+	width: 150px;
+	height: 150px;
+	vertical-align: top;
+	text-align: left;
+	border: 1px solid #ccc;
+}
+
+.weekday-header {
+	text-align: center;
+}
+
+.month {
+	width: 100%;
+}
+
+.month-head {
+	visibility: hidden;
+}
+
+.day-in-past {
+	background-color: #ededed;
+}
+
+.day-in-future {}

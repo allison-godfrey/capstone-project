@@ -95,6 +95,27 @@
           </div>
       </div>
   </div>
+  <div class="row">
+    <div class="col-xl-12 col-md-6 mb-4">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Student Progress Tracker</h6>
+        </div>
+        <div class="card-body">
+            {% for student_name, response_rate, color, questions_remaining  in bar_chart_data %}
+              <h4 class="small font-weight-bold">
+                {{ student_name }}
+                <span class="float-right">{{ questions_remaining }} unanswered question(s)</span>
+              </h4>
+              <div class="progress mb-4">
+                  <div class="progress-bar bg-{{ color }}" role="progressbar" style="width: {{ response_rate }}%"
+                      aria-valuenow="{{ response_rate }}" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 {% endblock %}

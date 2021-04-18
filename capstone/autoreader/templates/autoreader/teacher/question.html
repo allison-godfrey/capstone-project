@@ -12,20 +12,37 @@
   <div class="align-items-center justify-content-between mb-6"> 
     <div class="row">
       <div class="col-lg-6">
-        {% for response, text in responses %}
+        {% for response, feedback_form in responses %}
           <div class="card shadow mb-4">
               <!-- Card Header - Accordion -->
-              <a href="#collapseCardExample-{{ question.id }}" class="d-block card-header py-3" data-toggle="collapse"
+              <a href="#collapseCardExample-{{ response.id }}" class="d-block card-header py-3" data-toggle="collapse"
                   role="button" aria-expanded="true" aria-controls="collapseCardExample">
-                  <h6 class="m-0 font-weight-bold text-primary">{{ response.student.user.username }}</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">
+                    {{ response.student.user.username }}
+                    {% if response.feedback %}
+                    <i class="fas fa-check" style="color: LightGreen"></i>
+                  {% endif %}
+                  </h6>
               </a>
               <!-- Card Content - Collapse -->
-              <div class="collapse show" id="collapseCardExample-{{ question.id }}">
+              <div class="collapse" id="collapseCardExample-{{ response.id }}">
                   <div class="card-body">
                     <img width=300 height=200 src="/autoreader/{{ response.response.name }}"></img>
+                    <p></p>
+                    <p>{{ response.text }}</p>
+                    <p>
+                      <form method="post" action="{% url 'autoreader:feedback' course_id=course.id assignment_id=assignment_id question_id=question.id response_id=response.id %}">
+                        {% csrf_token %}
+                        {{ feedback_form|crispy }}
+                        {% if response.feedback %}
+                          <input class="btn btn-primary" type="submit" value="Edit feedback" />
+                        {% else %}
+                          <input class="btn btn-primary" type="submit" value="Submit feedback" />
+                        {% endif %}
+                      </form>
+                    </p>
                   </div>
               </div>
-              {{ text }}
           </div>
 
         {% endfor %}

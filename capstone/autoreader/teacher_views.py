@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from .models import *
-from .forms import PersonForm, CourseForm, AssignmentForm, QuestionForm
+from .forms import *
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .helpers import *
 
@@ -147,18 +147,24 @@ def question(request, course_id, assignment_id, question_id):
   except Person.DoesNotExist:
     return redirect('/autoreader/')
 
+  course = get_object_or_404(Course, pk=course_id)
   question = get_object_or_404(Question, pk=question_id, teacher=person)
   responses = Response.objects.filter(question_id = question.id).select_related('student__user')
-  texts = []
+  feedback_forms = []
   for response in responses:
-    # pass image to the model to get extracted text
-    model = Model(open('autoreader/htr/model/charList.txt').read(), DecoderType.BestPath, mustRestore=True, dump=False)
-    "recognize text in image provided by file path"
-    img = preprocess(cv2.imread(response.response.path, cv2.IMREAD_GRAYSCALE), Model.imgSize)
-    batch = Batch(None, [img])  
-    (recognized, probability) = model.inferBatch(batch, True)
-    texts.append(recognized[0])
-
+    if response.feedback:
+      feedback_forms.append(FeedbackForm(initial = {'feedback': response.feedback}))
+    else:
+      feedback_forms.append(FeedbackForm())
+  # texts = []
+  # for response in responses:
+  #   # pass image to the model to get extracted text
+  #   model = Model(open('autoreader/htr/model/charList.txt').read(), DecoderType.BestPath, mustRestore=True, dump=False)
+  #   "recognize text in image provided by file path"
+  #   img = preprocess(cv2.imread(response.response.path, cv2.IMREAD_GRAYSCALE), Model.imgSize)
+  #   batch = Batch(None, [img])  
+  #   (recognized, probability) = model.inferBatch(batch, True)
+  #   texts.append(recognized[0])
   return render(
     request,
     'autoreader/teacher/question.html',
@@ -166,5 +172,24 @@ def question(request, course_id, assignment_id, question_id):
      'courses': get_courses_for_teacher(request),
      'user': request.user,
      'question': question,
-     'responses': zip(responses, texts)}
+     'responses': zip(responses, feedback_forms),
+     'assignment_id': assignment_id}
   )
+
+@login_required
+@user_passes_test(is_teacher)
+def feedback(request, course_id, assignment_id, question_id, response_id):
+  if request.method == 'POST':
+    response = get_object_or_404(Response, id=response_id)
+    feedback_form = FeedbackForm(request.POST, instance=response)
+    if feedback_form.is_valid():
+      response = feedback_form.save()
+      return redirect(reverse('autoreader:question', args=[course_id, assignment_id, question_id]))
+
+  return redirect(reverse('autoreader:question', args=[course_id, assignment_id, question_id]))
+
+
+
+
+
+

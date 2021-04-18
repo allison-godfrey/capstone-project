@@ -13,7 +13,7 @@
     <div class="row">
       <div class="col-lg-6">
 
-        {% for question, response in questions %}
+        {% for question, response, update_response_form in questions %}
           <div class="card shadow mb-4">
             <!-- Card Header - Accordion -->
             <a href="#collapseCardExample-{{ question.id }}" class="d-block card-header py-3" data-toggle="collapse"
@@ -39,9 +39,19 @@
                           <input type="hidden" name="next" value="{{ next }}" />
                         </form>
                       {% else %}
-                        <p>You've already submitted an answer!</p>
+                      <form method="post" action="{% url 'autoreader:update_response' course_id=course_id assignment_id=assignment.id question_id=question.id response_id=response.id %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ update_response_form|crispy }}
+                        <input class="btn btn-primary" type="submit" value="Update response" />
+                        <input type="hidden" name="next" value="{{ next }}" />
+                      </form>
                       {% endif %}
                     </div>
+                    <hr>
+                    <h4>Your teacher's feedback</h4>
+                    <p>
+                      {{ response.feedback }}
+                    </p>
                 </div>
             </div>
           </div>

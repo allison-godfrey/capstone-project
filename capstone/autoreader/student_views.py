@@ -2,8 +2,9 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .helpers import *
-from .forms import JoinCourseForm, ResponseForm
+from .forms import JoinCourseForm, ResponseForm, UpdateResponseForm
 from .models import *
+from .model import *
 
 @login_required
 @user_passes_test(is_student)
@@ -57,12 +58,21 @@ def assignment(request, course_id, assignment_id):
   # has responded to that question
   # e.g. {1: true, 2: false} means the student has responded to question 1 but not question 2
   responses = []
+  update_response_forms = []
 
   for question in questions:
-  	if Response.objects.filter(question_id = question.id, student_id = person.id).exists():
-  		responses.append(True)
-  	else:
-  		responses.append(False)
+  	try:
+  		response = Response.objects.get(question_id = question.id, student_id = person.id)
+  		update_response_form = UpdateResponseForm(initial = {'text': response.text})
+  	except Response.DoesNotExist:
+  		response = None
+  		update_response_form = None
+  	responses.append(response)
+  	update_response_forms.append(update_response_form)
+  	# if Response.objects.filter(question_id = question.id, student_id = person.id).exists():
+  	# 	responses.append(True)
+  	# else:
+  	# 	responses.append(False)
 
   return render(
     request,
@@ -70,7 +80,7 @@ def assignment(request, course_id, assignment_id):
     {'course_id': course_id,
      'courses': get_courses_for_student(request),
      'assignment': assignment,
-     'questions': zip(get_questions(request, assignment_id), responses),
+     'questions': zip(get_questions(request, assignment_id), responses, update_response_forms),
      'user': request.user,
      'response_form': response_form}
   )
@@ -89,6 +99,10 @@ def question(request, course_id, assignment_id, question_id):
 			response.assignment_id = assignment_id
 			response.question_id = question_id
 			response.teacher = course.teacher
+			# response.text = extract_word_from_image(response.response.path)
+			response.text = ''
+			response.save()
+			response.text = extract_words_from_image(response.response.name.split('.')[0], response.response.path)
 			response.save()
 			return redirect(reverse('autoreader:student_assignment', args=[course_id, assignment_id]))
 	else:
@@ -104,3 +118,15 @@ def question(request, course_id, assignment_id, question_id):
 			'question_id': question_id,
 			'user': request.user}
 	)
+
+@login_required
+@user_passes_test(is_student)
+def update_response(request, course_id, assignment_id, question_id, response_id):
+	if request.method == 'POST':
+		response = get_object_or_404(Response, id=response_id)
+		update_response_form = UpdateResponseForm(request.POST, instance=response)
+		if update_response_form.is_valid():
+			response = update_response_form.save()
+			return redirect(reverse('autoreader:student_assignment', args=[course_id, assignment_id]))
+
+	return redirect(reverse('autoreader:student_assignment', args=[course_id, assignment_id]))

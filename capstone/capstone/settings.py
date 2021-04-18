@@ -26,7 +26,7 @@ SECRET_KEY = '4%$+_7h_m31-ca4a$l#p0c^l5#&=y$0xs_^mny0=4ymd+5984-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['autoreader-env.eba-i6sa96qv.us-west-2.elasticbeanstalk.com', 'localhost']
 
 
 # Application definition
@@ -121,6 +121,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = 'static'
 
 STATICFILES_DIRS = [
     BASE_DIR / 'autoreader' / 'static' / 'autoreader',

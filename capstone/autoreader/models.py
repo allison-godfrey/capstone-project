@@ -1,6 +1,7 @@
 import datetime
 import string
 import random
+from datetime import datetime
 
 from django.db import models
 from django.utils import timezone
@@ -34,6 +35,7 @@ class Assignment(models.Model):
   course = models.ForeignKey(Course, on_delete=models.CASCADE)
   assignment_name = models.CharField(max_length=100)
   description = models.CharField(max_length=200)
+  due_date = models.DateField(default = datetime.now().date())
 
 class Question(models.Model):
   teacher = models.ForeignKey(Person, on_delete=models.CASCADE)
@@ -54,3 +56,9 @@ class Response(models.Model):
   assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
   question = models.ForeignKey(Question, on_delete=models.CASCADE)
   response = models.ImageField()
+  text = models.CharField(max_length = 3000)
+  feedback = models.CharField(max_length = 3000)
+
+
+
+
